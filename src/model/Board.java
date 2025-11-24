@@ -1,5 +1,7 @@
 package model;
 
+import protocol.SpaceProtocol;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -8,9 +10,12 @@ import static java.util.Objects.nonNull;
 
 public class Board {
 
-    private List<List<Space>> board;
+    private final List<List<SpaceProtocol>> board;
     private GameStatusEnum status = GameStatusEnum.NON_STARTED;
 
+    public Board(List<List<SpaceProtocol>> spaces) {
+        board = spaces;
+    }
 
 
     public boolean hasError(){
@@ -41,7 +46,7 @@ public class Board {
         }
     }
 
-    public boolean addBoard(int row, int col, int num){
+    public boolean addNumber(int row, int col, int num){
         setGameStatus();
         if(status == GameStatusEnum.COMPLETE) finishGame();
 
@@ -72,7 +77,7 @@ public class Board {
         return !hasError() && status == GameStatusEnum.COMPLETE;
     }
 
-    public List<List<Space>> getBoard() {
+    public List<List<SpaceProtocol>> getBoard() {
         return board;
     }
 
