@@ -12,6 +12,7 @@ public abstract class SpaceProtocol {
         if(fixed){
         actual = expected;
         }
+
     }
 
     public void cleanActual(){

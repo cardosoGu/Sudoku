@@ -63,8 +63,13 @@ public class Board {
     }
 
     public boolean clearValue(int row, int col){
-        if(board.get(row).get(col).isFixed()) return false;
-        board.get(row).get(col).cleanActual();
+        int rowToFindOnArray = row -1;
+        int colToFindOnArray = col -1;
+
+        if(board.get(rowToFindOnArray).get(colToFindOnArray).isFixed()) return false;
+
+        board.get(rowToFindOnArray).get(colToFindOnArray).cleanActual();
+
         return true;
     }
 
@@ -81,8 +86,15 @@ public class Board {
         return board;
     }
 
-    public GameStatusEnum getStatus() {
-        return status;
+    public String getStatus() {
+        if (status == GameStatusEnum.COMPLETE) {
+            return "Complete";
+        }else if(status == GameStatusEnum.INCOMPLETE){
+            return "Incomplete";
+        }
+        else{
+            return "Non Started yet, please init the game";
+        }
     }
 
 

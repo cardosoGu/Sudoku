@@ -26,8 +26,8 @@ public class Main {
 
     public static void main(String[] args) {
         var positions = Stream.of(positionToSplit).collect(Collectors.toMap(
-                k -> k.split(";")[0],
-                v -> v.split(";")[1]
+                k -> k.split(";")[0].trim(),
+                v -> v.split(";")[1].trim()
         ));
 
         var option = -1;
@@ -48,15 +48,36 @@ public class Main {
 
            switch (option) {
                case 1 -> gameInit(positions);
-               case 2 -> addNumber();
-               case 3 -> removeNumber();
+               case 2 -> {
+                   System.out.println("please insert the row: ");
+                  int row = scan.nextInt();
+                   System.out.println("please insert the col: ");
+                  int col = scan.nextInt();
+                   System.out.println("please insert the num to add: ");
+                  int num = scan.nextInt();
+                   if(num < 1 || num > 9 || row < 1 || row > 9 || col < 1 || col > 9) {
+                       System.out.println("please a valid num, beetween 1 and 9");
+
+                   }
+                   addNumber(row, col, num);
+               }
+               case 3 -> {
+                   System.out.println("please insert the row: ");
+                   int row = scan.nextInt();
+                   System.out.println("please insert the col: ");
+                   int col = scan.nextInt();
+                   if(row < 1 || row > 9 || col < 1 || col > 9) {
+                       System.out.println("please a valid num, beetween 1 and 9");
+                   }
+                   removeNumber(row, col);
+               }
                case 4 -> displayBoard();
                case 5 -> verifyStatus();
                case 6 -> resetGame();
                case 7 -> finishGame();
                case 8 -> System.exit(0);
+               default -> System.out.println("Invalid option");
            }
-
 
         }
 
@@ -65,6 +86,7 @@ public class Main {
     private static void gameInit(Map<String, String> positions) {
         if(board != null){
             System.out.println("Game already started!");
+            return;
         }
 
         List<List<SpaceProtocol>> spaces = new ArrayList<>();
@@ -75,35 +97,75 @@ public class Main {
                 //format row/col this model, and get value by the key in map
                 var positionParam = positions.get("%s,%s".formatted(row,col));
                 //returned value of key map, so parse values to int and boolean
-                var expected = Integer.parseInt(positionParam.split(",")[0]);
-                var fixed = Boolean.parseBoolean(positionParam.split(",")[1]);
+                var expected = Integer.parseInt(positionParam.split(",")[0].trim());
+                var fixed = Boolean.parseBoolean(positionParam.split(",")[1].trim());
                 spaces.get(row).add(new Space(expected,fixed));
             }
         }
         board = new Board(spaces);
         template = new BoardTemplate(board);
+        displayBoard();
         System.out.println("Game started!");
     }
 
-    private static void addNumber() {
+    private static void addNumber(int row, int col,  int num) {
+        if(board == null){
+            System.out.println("Please init the game");
+            return;
+        }
+        if (board.addNumber(row, col, num)){
+            displayBoard();
+            System.out.println("Number added!");
+            return;
+        }
+        System.out.println("Number not added!");
 
     }
     private static void finishGame() {
+        if(board == null){
+            System.out.println("Please init the game");
+            return;
+        }
+       if(board.finishGame()) {
+           System.out.println("Game finished!");
+       }else{
+           displayBoard();
+           System.out.println("Please verify the game!, some number is wrong or empty.");
+       }
 
     }
     private static void resetGame() {
-
+        if(board == null){
+            System.out.println("Please init the game");
+            return;
+        }
+        board.resetGame();
+        displayBoard();
+        System.out.println("Game reseted!");
     }
     private static void verifyStatus() {
+        displayBoard();
+        System.out.printf("Your game is %s ", board.getStatus());
     }
 
     private static void displayBoard() {
         if(board == null){
             System.out.println("Please init the game");
+            return;
         }
         template.printBoard();
     }
 
-    private static void removeNumber() {
+    private static void removeNumber(int row, int col) {
+        if(board == null){
+            System.out.println("Please init the game");
+            return;
+        }
+       if (board.clearValue(row, col)){
+           displayBoard();
+           System.out.println("Value removed!");
+           return;
+       }
+        System.out.println("Value not removed!");
     }
 }
