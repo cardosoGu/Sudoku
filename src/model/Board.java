@@ -87,6 +87,7 @@ public class Board {
     }
 
     public GameStatusEnum getStatus() {
+        setGameStatus();
         if (status == GameStatusEnum.COMPLETE) {
             return GameStatusEnum.COMPLETE;
         }else if(status == GameStatusEnum.INCOMPLETE){

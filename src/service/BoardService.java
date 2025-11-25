@@ -41,6 +41,8 @@ public class BoardService {
 
 
 
+
+
     private List<List<SpaceProtocol>> gameInit(final Map<String, String> boardMap) {
         List<List<SpaceProtocol>> spaces = new ArrayList<>();
         for (int row = 0; row < boardLimit; row++) {

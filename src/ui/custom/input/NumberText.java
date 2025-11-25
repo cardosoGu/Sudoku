@@ -1,16 +1,19 @@
 package ui.custom.input;
 
 import model.Space;
+import protocol.SpaceProtocol;
+import service.EventEnum;
+import service.EventListener;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 
-public class NumberText extends JTextField {
-    private final Space space;
+public class NumberText extends JTextField implements EventListener {
+    private final SpaceProtocol space;
 
-    public NumberText(Space space) {
+    public NumberText(SpaceProtocol space) {
         this.space = space;
         var dimension = new Dimension(50,50);
         this.setPreferredSize(dimension);
@@ -23,13 +26,20 @@ public class NumberText extends JTextField {
         if (space.isFixed()){
             this.setText(space.getActual().toString());
         }
+
         this.getDocument().addDocumentListener(new DocumentListener() {
 
             private void changeSpace(){
-                if(getText().isEmpty()){
+                if(space.isFixed()) return;
+                String txt = getText().trim();
+
+                if(txt.isEmpty()){
                     space.cleanActual();
+
+                }else {
+                    int value = Integer.parseInt(txt);
+                    space.setActual(value);
                 }
-                space.setActual(Integer.parseInt(getText()));
             }
 
             @Override
@@ -48,6 +58,13 @@ public class NumberText extends JTextField {
             }
         });{
 
+        }
+    }
+
+    @Override
+    public void notify(EventEnum event) {
+        if(event == EventEnum.CLEAR_SPACE && !space.isFixed()){
+            this.setText("");
         }
     }
 }

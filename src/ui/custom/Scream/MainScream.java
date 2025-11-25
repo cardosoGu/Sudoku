@@ -1,17 +1,26 @@
 package ui.custom.Scream;
 
-import com.sun.tools.javac.Main;
+
 import model.GameStatusEnum;
+
+import protocol.SpaceProtocol;
 import service.BoardService;
+import service.EventEnum;
+import service.NotifierService;
 import ui.custom.button.ButtonCheckGameStatus;
 import ui.custom.button.ButtonReset;
 import ui.custom.button.FinishGameButton;
 import ui.custom.frame.MainFrame;
+import ui.custom.input.NumberText;
 import ui.custom.panel.MainPanel;
+import ui.custom.panel.SudokuSector;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.List;
+
 
 public class MainScream {
     private final static Dimension dimension = new Dimension(600, 600);
@@ -21,14 +30,24 @@ public class MainScream {
     private ButtonCheckGameStatus buttonCheckGameStatus;
 
     private final BoardService boardService;
+    private final NotifierService notifierService;
 
     public MainScream(final Map<String, String> gameConfig) {
         this.boardService = new BoardService(gameConfig);
+        this.notifierService = new NotifierService();
     }
 
     public void buildMainScreen(){
         JPanel mainPanel = new MainPanel(dimension);
         JFrame frame = new MainFrame(dimension, mainPanel);
+        for (int r = 0; r < 9; r+=3) {
+            var endRow = r + 2;
+            for (int c = 0; c < 9; c+=3) {
+                var endCol = c + 2;
+                var spaces = getSpacesFromSector(boardService.getSpaceProtocols(), c, endCol, r, endRow);
+                mainPanel.add(generateSection(spaces));
+            }
+        }
         addResetButton(mainPanel);
         addCheckGameStatus(mainPanel);
         addFinishGameButton(mainPanel);
@@ -36,6 +55,21 @@ public class MainScream {
         frame.repaint();
     }
 
+    private List<SpaceProtocol> getSpacesFromSector(List<List<SpaceProtocol>> spaces, final int initCol, final int endCol, final int initRow, final int endRow) {
+        List<SpaceProtocol> spacesFromSector = new ArrayList<>();
+        for(int r = initRow; r <= endRow; r++){
+            for(int c = initCol; c <= endCol; c++){
+                spacesFromSector.add(spaces.get(r).get(c));
+            }
+        }
+    return spacesFromSector;
+    }
+
+    private JPanel generateSection(final List<SpaceProtocol> spaces){
+        List<NumberText> fields = new ArrayList<>(spaces.stream().map(NumberText::new).toList());
+        fields.forEach(n -> notifierService.subscriber(EventEnum.CLEAR_SPACE, n));
+        return new SudokuSector(fields);
+    }
     private void addFinishGameButton(JPanel mainPanel) {
         finishGameButton = new FinishGameButton(e -> {
         if(boardService.gameIsFinished()){
@@ -62,7 +96,7 @@ public class MainScream {
                 case COMPLETE -> "Game FullFilled";
 
             };
-            if(!gameStatus.equals(GameStatusEnum.NON_STARTED)){
+            if(gameStatus.equals(GameStatusEnum.COMPLETE)){
                 message += hasError ? " but wrong, please fix" : " and right! congratulations!";
             }
             JOptionPane.showMessageDialog(null, message);
@@ -82,6 +116,7 @@ public class MainScream {
         );
         if(dialogResult == 0){
             boardService.reset();
+            notifierService.notifier(EventEnum.CLEAR_SPACE);
         }
         });
         mainPanel.add(buttonReset);
