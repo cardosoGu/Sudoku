@@ -13,41 +13,6 @@ Projeto de Sudoku em Java com interface GUI. Permite inserir/remover números, r
 - Interface de console simples e inputs via `NumberText` para GUI.
 - Validação de números, proteção de células fixas e prevenção de erros de input.
 
-## Estrutura do Projeto
-
-```
-src/
-├─ model/
-│  ├─ Board.java            # Lógica do tabuleiro
-│  ├─ Space.java            # Representa uma célula
-│  ├─ GameStatusEnum.java   # Enum de status do jogo
-├─ protocol/
-│  ├─ SpaceProtocol.java
-├─ service/
-│  ├─ BoardService.java
-│  ├─ NotifierService.java
-│  ├─ EventEnum.java
-│  ├─ EventListener.java
-├─ ui/
-│  ├─ buttons/
-│  │  ├─ ButtonCheckGameStatus.java
-│  │  ├─ ButtonReset.java
-│  │  ├─ FinishGameButton.java
-│  ├─ frame/
-│  │  ├─ MainFrame.java
-│  ├─ input/
-│  │  ├─ NumberText.java
-│  │  ├─ NumberText.java
-│  ├─ panel/
-│  │  ├─ MainPanel.java
-│  │  ├─ SudokuSelector.java
-│  ├─ scream/
-│  │  ├─ MainScream.java
-├─ utils/
-│  ├─ BoardTemplate.java
-│  ├─ NumsFixedsAndExpecteds.java
-├─ UIMain.java
-```
 
 ## Como Rodar
 
