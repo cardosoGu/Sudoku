@@ -86,14 +86,14 @@ public class Board {
         return board;
     }
 
-    public String getStatus() {
+    public GameStatusEnum getStatus() {
         if (status == GameStatusEnum.COMPLETE) {
-            return "Complete";
+            return GameStatusEnum.COMPLETE;
         }else if(status == GameStatusEnum.INCOMPLETE){
-            return "Incomplete";
+            return GameStatusEnum.INCOMPLETE;
         }
         else{
-            return "Non Started yet, please init the game";
+            return GameStatusEnum.NON_STARTED;
         }
     }
 
