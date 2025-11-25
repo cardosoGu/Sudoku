@@ -1,4 +1,4 @@
-```markdown
+
 # Sudoku Java Console & GUI
 
 Projeto de Sudoku em Java com interface GUI. Permite inserir/remover números, resetar e checar andamento e finalizar o jogo com verificação com regras do jogo.
